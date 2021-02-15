@@ -20,10 +20,9 @@ const playerFactory = (name, signChoice) => {
     return { name, addPoint, displayPoints, getPoints, getAssignedSign }
 }
 
+//Fields of gameboard grid
 const fieldFactory = (a, b) => {
     const fieldName = "x" + a + "-" + "y" + b;
-    const fieldPositionX = a;
-    const fieldPositionY = b;
     let fieldSign = "";
 
     console.log("createdObject");
@@ -31,6 +30,8 @@ const fieldFactory = (a, b) => {
     const getSign = () => {
         return fieldSign;
     }
+
+    //Fieldname aka position
     const getFieldName = () => {
         return fieldName;
     }
@@ -61,13 +62,7 @@ const game = (() => {
     let board = {};
     let players = [];
 
-    let currentSignToInsert = "O";
-
-    const setFirstSign = (sign) => {
-        if (currentSignToInsert === "") {
-            currentSignToInsert = sign;
-        }
-    }
+    let currentSignToInsert = "";
 
     //create board
     for (let j = 0; j < 3; j++) {
@@ -77,10 +72,20 @@ const game = (() => {
         }
     }
 
+    const setFirstSign = (sign) => {
+        if (currentSignToInsert === "") {
+            currentSignToInsert = sign;
+        }
+    }
 
     const setPlayers = (playerOne, playerTwo) => {
         players.push(playerFactory(playerOne, "O"));
         players.push(playerFactory(playerTwo, "X"));
+        console.log(players);
+    }
+
+    const getPlayers = () => {
+        return players;
     }
 
     const changeSignToInsert = () => {
@@ -104,95 +109,102 @@ const game = (() => {
         if (isValidChange) {
             changeSignToInsert();
         }
-
-        checkIfWon();
+        displayController.refreshBoard(game.getBoard());
+        afterGameProcedure(ifWinnerReturn());
     }
 
-    const checkIfWon = () => {
+    const ifWinnerReturn = () => {
+        if(Object.values(board).every(value => value.getSign() != "")) {
+            return "tie";
+        }
+
         if (board["x0-y0"].getSign() === board["x1-y0"].getSign() &&
             board["x0-y0"].getSign() === board["x2-y0"].getSign() &&
             board["x0-y0"].getSign() !== "") {
             let winner = players.find(player => board["x0-y0"].getSign() === player.getAssignedSign());
-            winner.addPoint();
-            resetBoard();
-            console.log(`Winner is ${winner.name} 1`);
+            return winner;
         }
 
-        if (board["x0-y0"].getSign() === board["x0-y1"].getSign() &&
+        else if (board["x0-y0"].getSign() === board["x0-y1"].getSign() &&
             board["x0-y0"].getSign() === board["x0-y2"].getSign() &&
             board["x0-y0"].getSign() !== "") {
             let winner = players.find(player => board["x0-y0"].getSign() === player.getAssignedSign());
-            winner.addPoint();
-            resetBoard();
-            console.log(`Winner is ${winner.name}`);
+            return winner;
         }
 
-        if (board["x2-y2"].getSign() === board["x1-y2"].getSign() &&
+        else if (board["x2-y2"].getSign() === board["x1-y2"].getSign() &&
             board["x2-y2"].getSign() === board["x0-y2"].getSign() &&
             board["x2-y2"].getSign() !== "") {
             let winner = players.find(player => board["x2-y2"].getSign() === player.getAssignedSign());
-            winner.addPoint();
-            resetBoard();
-            console.log(`Winner is ${winner.name}`);
+            return winner;
         }
 
-        if (board["x2-y2"].getSign() === board["x2-y1"].getSign() &&
+        else if (board["x2-y2"].getSign() === board["x2-y1"].getSign() &&
             board["x2-y2"].getSign() === board["x2-y0"].getSign() &&
             board["x2-y2"].getSign() !== "") {
             let winner = players.find(player => board["x2-y2"].getSign() === player.getAssignedSign());
-            winner.addPoint();
-            resetBoard();
-            console.log(`Winner is ${winner.name}`);
+            return winner;
         }
 
-        if (board["x1-y1"].getSign() === board["x1-y0"].getSign() &&
+        else if (board["x1-y1"].getSign() === board["x1-y0"].getSign() &&
             board["x1-y1"].getSign() === board["x1-y2"].getSign() &&
             board["x1-y1"].getSign() !== "") {
             let winner = players.find(player => board["x1-y1"].getSign() === player.getAssignedSign());
-            winner.addPoint();
-            resetBoard();
-            console.log(`Winner is ${winner.name}`);
+            return winner;
         }
 
-        if (board["x1-y1"].getSign() === board["x0-y1"].getSign() &&
+        else if (board["x1-y1"].getSign() === board["x0-y1"].getSign() &&
             board["x1-y1"].getSign() === board["x2-y1"].getSign() &&
             board["x1-y1"].getSign() !== "") {
             let winner = players.find(player => board["x1-y1"].getSign() === player.getAssignedSign());
-            winner.addPoint();
-            resetBoard();
-            console.log(`Winner is ${winner.name}`);
+            return winner;
         }
 
-        if (board["x1-y1"].getSign() === board["x0-y0"].getSign() &&
+        else if (board["x1-y1"].getSign() === board["x0-y0"].getSign() &&
             board["x1-y1"].getSign() === board["x2-y2"].getSign() &&
             board["x1-y1"].getSign() !== "") {
             let winner = players.find(player => board["x1-y1"].getSign() === player.getAssignedSign());
-            winner.addPoint();
-            resetBoard();
-            console.log(`Winner is ${winner.name}`);
+            return winner;
         }
 
-        if (board["x1-y1"].getSign() === board["x2-y0"].getSign() &&
+        else if (board["x1-y1"].getSign() === board["x2-y0"].getSign() &&
             board["x1-y1"].getSign() === board["x0-y2"].getSign() &&
             board["x1-y1"].getSign() !== "") {
             let winner = players.find(player => board["x1-y1"].getSign() === player.getAssignedSign());
-            winner.addPoint();
-            resetBoard();
-            console.log(`Winner is ${winner.name}`);
+            return winner;
+        }
+
+        else {
+            return "";
         }
 
 
+
+
+
+    }
+
+    const afterGameProcedure = (winner) => {
+        if(winner === "tie") {
+            window.alert(`It's a tie!`);
+            resetBoard();
+        }
+        else if (winner != "") {
+            winner.addPoint();
+            window.alert(`Winner is ${winner.name}`);
+            resetBoard();
+        }
     }
 
     const resetBoard = () => {
-        for(field in board){
+        for (field in board) {
             board[field].clearField();
         }
-        displayController.refreshBoard(game.getBoard()); 
+        displayController.refreshBoard(game.getBoard());
     }
 
 
-    return { getBoard, playerPlay, setFirstSign, setPlayers };
+    return { getPlayers, getBoard, playerPlay, setFirstSign, setPlayers, resetBoard };
 
 })();
 
@@ -218,6 +230,14 @@ const displayController = (() => {
             });
             container.appendChild(field);
         });
+
+        const players = game.getPlayers();
+        const playerOneScore = document.querySelector("#playerOneScore");
+        playerOneScore.textContent = players[0].getPoints();
+        const playerTwoScore = document.querySelector("#playerTwoScore");
+        playerTwoScore.textContent = players[1].getPoints();
+
+
     }
 
 
@@ -227,18 +247,20 @@ const displayController = (() => {
 })();
 
 //event listeners
-let yourSignButton = document.querySelector("#yourSign");
-yourSignButton.addEventListener("click", e => game.setFirstSign(e.target.textContent));
+let yourSignButtons = document.querySelectorAll(".yourSign");
+yourSignButtons.forEach(button => button.addEventListener("click", e => game.setFirstSign(e.target.textContent)));
 
 let startGameButton = document.querySelector("#startGame");
 startGameButton.addEventListener("click", () => {
     let playerOneName = document.querySelector("#playerOneName").value;
     let playerTwoName = document.querySelector("#playerTwoName").value;
-    displayController.refreshBoard(game.getBoard());
     game.setPlayers(playerOneName, playerTwoName);
+    displayController.refreshBoard(game.getBoard());
 
 });
 
+let restartGameButton = document.querySelector("#restartGame");
+restartGameButton.addEventListener("click", game.resetBoard);
 
 
 

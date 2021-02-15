@@ -18,3 +18,28 @@
     line-height: 75px;
 
 }
+
+label {
+    display: inline-block;
+    width: 200px;
+}
+
+.container { 
+    margin: 20px auto;
+    width: 500px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 30px;
+    margin: 30px;
+    font-weight: bold;
+}
+
+.gameButtons {
+    margin: 10px;
+}
+
+.playerForm {
+    margin: 20px auto;
+}
